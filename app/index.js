@@ -90,3 +90,74 @@ utils.environmentNoting();
 //   });
 // });
 
+// function getSquare(canvas, evt) {
+//     var rect = canvas.getBoundingClientRect();
+//     return {
+//         x: 1 + (evt.clientX - rect.left) - (evt.clientX - rect.left)%10,
+//         y: 1 + (evt.clientY - rect.top) - (evt.clientY - rect.top)%10
+//     };
+// }
+
+// function drawGrid(context) {
+//     for (var x = 0.5; x < 1001; x += 2) {
+//       context.moveTo(x, 0);
+//       context.lineTo(x, 1000);
+//     }
+    
+//     for (var y = 0.5; y < 1001; y += 2) {
+//       context.moveTo(0, y);
+//       context.lineTo(1000, y);
+//     }
+    
+//     context.strokeStyle = "#00f";
+//     context.stroke();
+// }
+
+// function fillSquare(context, x, y){
+//     context.fillStyle = "#00f"
+//     context.fillRect(x,y,1,1);
+// }
+
+// var canvas = document.getElementById('grid');
+// var context = canvas.getContext('2d');
+
+// drawGrid(context);
+
+// canvas.addEventListener('click', function(evt) {
+// 	var mousePos = getSquare(canvas, evt);
+// 	console.log("click");
+//     fillSquare(context, mousePos.x, mousePos.y)
+// }, false);
+
+var drawGrid = function(w, h, id) {
+    var canvas = document.getElementById(id);
+    var ctx = canvas.getContext('2d');
+    ctx.canvas.width  = w;
+    ctx.canvas.height = h;
+    
+    var data = '<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"> \
+        <defs> \
+            <pattern id="smallGrid" width="3" height="6" patternUnits="userSpaceOnUse"> \
+                <path d="M 8 0 L 0 0 0 8" fill="none" stroke="gray" stroke-width="0.3" /> \
+            </pattern> \
+            <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"> \
+                <rect width="80" height="80" fill="url(#smallGrid)" /> \
+                <path d="M 80 0 L 0 0 0 80" fill="none" stroke="gray" stroke-width="1" /> \
+            </pattern> \
+        </defs> \
+        <rect width="100%" height="100%" fill="url(#smallGrid)" /> \
+    </svg>';
+
+    var DOMURL = window.URL || window.webkitURL || window;
+    
+    var img = new Image();
+    var svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+    var url = DOMURL.createObjectURL(svg);
+    
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+      DOMURL.revokeObjectURL(url);
+    }
+    img.src = url;
+}
+drawGrid(800, 400, "grid");
