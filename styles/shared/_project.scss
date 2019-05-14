@@ -2,9 +2,27 @@
  * Project specific styling.
  */
   
+ p {
+    -webkit-font-smoothing: antialiased;
+  }
+  
   text {
     font-family: "Benton Sans", Helvetica, Arial, sans-serif !important;
   }
+  
+  .article-author-hcard-item, .article-author-hcard__twitter, .article-author-hcard__email, .article-author-hcard__phone {
+    font-family: "Benton Sans Condensed Medium",Helvetica,Arial,sans-serif !important;
+    font-size: 13px;
+    display: inline-block;
+    margin-right: 1em;
+    margin-bottom: 1em;
+    color: #909090 !important;
+    text-decoration: none !important;
+  }
+  
+    p {
+      -webkit-font-smoothing: antialiased;
+    }
   
   .article-author-hcard {
     margin-bottom: 1em;
