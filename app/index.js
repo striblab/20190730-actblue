@@ -196,8 +196,8 @@ loadData("./data/demovoteclean.tsv", (data) => {
         if(xyBinCounter[bin] == null) xyBinCounter[bin] = 0;
         d.xyBinIndex = xyBinCounter[bin]++;
     });
-    let s1 = d3.interpolateLab("#f7f7f7", "#0571b0");
-    let s2 = d3.interpolateLab("#f7f7f7", "#ca0020");
+    let s1 = d3.interpolateLab("#D1E6E1", "#0571b0");
+    let s2 = d3.interpolateLab("#F2AC93", "#ca0020");
     let strToRGBA = (str) => {
         let rgb = d3.rgb(str);
         return [ rgb.r / 255, rgb.g / 255, rgb.b / 255, 1 ];
