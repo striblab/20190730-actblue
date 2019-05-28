@@ -158,8 +158,7 @@ loadData("./data/demovoteclean.tsv", (data) => {
                 0.7,
                 color
             );
-        }
-    `)["Mark"];
+        }`)["Mark"];
     let marks = Stardust.mark.create(mark, Stardust.shader.lighting(), platform);
     demovote.forEach(d => {
         d.Longitude = +d.Longitude;
