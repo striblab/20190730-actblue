@@ -1,6 +1,10 @@
 # 20190730 Campfi
 
-Analysis of ACTBLUE small Democratic Party donor filings from Minnesota
+Analysis of ACTBLUE small donor filings from Minnesota.
+
+regl animations based upon the [helpful blog post and gists](https://peterbeshai.com/blog/2017-05-26-beautifully-animate-points-with-webgl-and-regl/) by Peter Beshai.
+
+Also uses [C3.js](https://c3js.org/) and [D3](https://d3js.org/).
 
 
 

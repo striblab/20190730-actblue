@@ -31,7 +31,10 @@ $selector-wrapper: '.strib-styles.ssa.ssb.ssc';
 }
 
   
-  #grid { 
-    width:100%;
-    height:595px;
+canvas {
+  position:fixed !important;
+  background-color:salmon;
+  width:100%;
+  height:500px;
+  z-index:1 !important;
 }
