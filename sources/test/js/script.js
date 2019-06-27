@@ -471,6 +471,7 @@ function launch(regl, donationsData) {
         layout(points);
         
         var colorScale = colorScales[currentColorScale];
+        
         points.forEach(function (d, i) {
             d.tx = d.x;
             d.ty = d.y;
