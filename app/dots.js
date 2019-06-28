@@ -586,10 +586,7 @@ class Dots {
           self._animate(layouts[6], self.points);
         }
       });
-
-
     }
-
 }
 
 export {
