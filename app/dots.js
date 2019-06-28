@@ -3,6 +3,7 @@ import 'waypoints/lib/noframework.waypoints.min.js';
 
 class Dots {
 
+    //global variable declarations and function binding
     constructor(regl, donationsData) {
         this.regl = regl;
         this.donationsData = donationsData;
@@ -18,6 +19,8 @@ class Dots {
         this.colorScales = [d3.scaleSequential(d3.interpolateViridis), d3.scaleSequential(d3.interpolateMagma), d3.scaleSequential(d3.interpolateInferno), d3
             .scaleSequential(d3.interpolateCool)].map(this._wrapColorScale);
         this.points = d3.range(this.numPoints).map(function (d) { return {}; });
+        // this.frag = fs.readFileSync(path.join(__dirname, 'frag.txt'), 'utf8'); //important vector math file
+        // this.vert = fs.readFileSync(path.join(__dirname, 'vert.txt'), 'utf8'); //important vector math file
         this._buildPoints = this._buildPoints.bind(this);
         this._candidateColors = this._candidateColors.bind(this);
         this._wrapColorScale = this._wrapColorScale.bind(this);
@@ -35,7 +38,6 @@ class Dots {
         this._showTotals = this._showTotals.bind(this);
         this._showArea = this._showArea.bind(this);
         this._animate = this._animate.bind(this);
-        this._step = this._step.bind(this);
     }
 
     //REGL SPRITE CONSTRUCTION
@@ -43,9 +45,12 @@ class Dots {
         
         var self = this;
 
+        //vector math to draw webgl sprites, in this case, a dot
         var drawPoints = self.regl({
             frag: '\n\t\t  precision highp float;\n\t\t\tvarying vec3 fragColor;\n\t\t\tvoid main() {\n\t\t\t\tgl_FragColor = vec4(fragColor, 1);\n\t\t\t}\n\t\t\t',
             vert: '\n\t\t\tattribute vec2 positionStart;\n\t\t\tattribute vec2 positionEnd;\n\t\t\tattribute float index;\n\t\t\tattribute vec3 colorStart;\n\t\t\tattribute vec3 colorEnd;\n\n\t\t\tvarying vec3 fragColor;\n\n\t\t\tuniform float pointWidth;\n\t\t\tuniform float stageWidth;\n\t\t\tuniform float stageHeight;\n\t\t\tuniform float elapsed;\n\t\t\tuniform float duration;\n\t\t\tuniform float delayByIndex;\n\t\t\t// uniform float tick;\n\t\t\t// uniform float animationRadius;\n\t\t\tuniform float numPoints;\n\n\t\t\t// helper function to transform from pixel space to normalized device coordinates (NDC)\n\t\t\t// in NDC (0,0) is the middle, (-1, 1) is the top left and (1, -1) is the bottom right.\n\t\t\tvec2 normalizeCoords(vec2 position) {\n\t\t\t\t// read in the positions into x and y vars\n\t      float x = position[0];\n\t      float y = position[1];\n\n\t\t\t\treturn vec2(\n\t\t      2.0 * ((x / stageWidth) - 0.5),\n\t\t      // invert y since we think [0,0] is bottom left in pixel space\n\t\t      -(2.0 * ((y / stageHeight) - 0.5)));\n\t\t\t}\n\n\t\t\t// helper function to handle cubic easing (copied from d3 for consistency)\n\t\t\t// note there are pre-made easing functions available via glslify.\n\t\t\tfloat easeCubicInOut(float t) {\n\t\t\t\tt *= 2.0;\n        t = (t <= 1.0 ? t * t * t : (t -= 2.0) * t * t + 2.0) / 2.0;\n\n        if (t > 1.0) {\n          t = 1.0;\n        }\n\n        return t;\n\t\t\t}\n\n\t\t\tvoid main() {\n\t\t\t\tgl_PointSize = pointWidth;\n\n\t\t\t\tfloat delay = delayByIndex * index;\n\t      float t;\n\n\t      // drawing without animation, so show end state immediately\n\t      if (duration == 0.0) {\n\t        t = 1.0;\n\n\t      // still delaying before animating\n\t      } else if (elapsed < delay) {\n\t        t = 0.0;\n\t      } else {\n\t        t = easeCubicInOut((elapsed - delay) / duration);\n\t      }\n\n\t      // interpolate position\n\t      vec2 position = mix(positionStart, positionEnd, t);\n\n\t      // apply an ambient animation\n\t\t\t\t// float dir = index > numPoints / 2.0 ? 1.0 : -1.0;\n\t      // position[0] += animationRadius * cos((tick + index) * dir);\n\t      // position[1] += animationRadius * sin((tick + index) * dir);\n\n\t      // above we + index to offset how they move\n\t      // we multiply by dir to change CW vs CCW for half\n\n\n\t      // interpolate color\n\t      fragColor = mix(colorStart, colorEnd, t);\n\n\t      // scale to normalized device coordinates\n\t\t\t\t// gl_Position is a special variable that holds the position of a vertex\n\t      gl_Position = vec4(normalizeCoords(position), 0.0, 1.0);\n\t\t\t}\n\t\t\t',
+            // frag: self.frag,
+            // vert: self.vert,
             attributes: {
                 positionStart: points.map(function (d) {
                     return [d.sx, d.sy];
@@ -83,12 +88,14 @@ class Dots {
 
     //DATA COLORING
     _candidateColors(points, donationsData) {
+        //define color scale per data label
         var colorScale = d3.scaleOrdinal()
             .domain(["WARREN", "HARRIS", "BIDEN", "SANDERS", "KLOBUCHAR", "BUTTIGIEG", "OROURKE", "OTHER"])
             .range(d3.range(0, 1, 0.16)
                 .concat(1)
                 .map(d3.scaleOrdinal(['#386cb0', '#f0027f', '#beaed4', '#7fc97f', '#bf5b17', '#fdc086', '#D8D861', '#666666'])));
         
+        //assign colors to our points accordingly
         points.forEach(function (d, i) {
             var rgbArray = d3.rgb(colorScale(donationsData[i].donor_can));
             d.color = [rgbArray.r / 255, rgbArray.g / 255, rgbArray.b / 255];
@@ -96,6 +103,7 @@ class Dots {
     }
     
     _wrapColorScale(scale) {
+        //convert color values to webgl color scaling since it's not using our standard CSS hex or rgb codes
         var tScale = d3.scaleLinear()
             .domain([0, 1])
             .range([0.4, 1]);
@@ -109,9 +117,11 @@ class Dots {
     _fieldSpill(points, width, height, donationsData) {
         var self = this;
 
+        //point size and spacing for this shape
         var pointWidth = width / 800;
         var pointMargin = 1;
         
+        //chop up data into buckets of different values in provided column
         var bydonor_can = d3.nest()
             .key(function (d) {
                 return d.all;
@@ -152,6 +162,7 @@ class Dots {
             })
             .object(binsArray);
         
+        //redraw the dots according to the categorized bins we've generated
         var arrangement = points.map(function (d, i) {
             var all = donationsData[i].all;
             var bin = bins[all];
@@ -510,79 +521,72 @@ class Dots {
                 }
             });
     }
-    
-
-    _step(index, layouts, points) {
-        var self = this;
-        self._animate(layouts[index], points);
-    }
 
     render() {
         var self = this;
 
-        self.points.forEach(function (d, i) {
+        //initialize points
+        var points = self.points;
+
+        points.forEach(function (d, i) {
             d.tx = self.width / 2;
             d.ty = self.height / 2;
             d.colorEnd = [0, 0, 0];
         });
 
+       //assign the different layout triggers to an array to more easily call them
        var layouts = [self._showField, self._showChart, self._showMap, self._showZips, self._showTotals, self._showArea, self._fadeout];
 
+       //assign crolling waypoint triggers
        var waypoint0 = new Waypoint({
         element: $('#step0')[0],
         handler: function(direction) {
-          console.log(0);
-          self._step(0, layouts, self.points);
+          self._animate(layouts[0], self.points);
         }
       });
 
       var waypoint1 = new Waypoint({
         element: $('#step1')[0],
         handler: function(direction) {
-          console.log(1);
-          self._step(1, layouts, self.points);
+          self._animate(layouts[1], self.points);
         }
       });
 
       var waypoint2 = new Waypoint({
         element: $('#step2')[0],
         handler: function(direction) {
-          console.log(2);
-          self._step(2, layouts, self.points);
+          self._animate(layouts[2], self.points);
         }
       });
 
       var waypoint3 = new Waypoint({
         element: $('#step3')[0],
         handler: function(direction) {
-          console.log(3);
-          self._step(3, layouts, self.points);
+          self._animate(layouts[3], self.points);
         }
       });
 
       var waypoint4 = new Waypoint({
         element: $('#step4')[0],
         handler: function(direction) {
-          console.log(4);
-          self._step(4, layouts, self.points);
+          self._animate(layouts[4], self.points);
         }
       });
       
       var waypoint5 = new Waypoint({
         element: $('#step5')[0],
         handler: function(direction) {
-          console.log(5);
-          self._step(5, layouts, self.points);
+          self._animate(layouts[5], self.points);
         }
       });
 
       var waypoint6 = new Waypoint({
         element: $('#step6')[0],
         handler: function(direction) {
-          console.log(6);
-          self._step(6, layouts, self.points);
+          self._animate(layouts[6], self.points);
         }
       });
+
 
     }
 
