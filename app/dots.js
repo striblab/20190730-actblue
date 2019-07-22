@@ -358,11 +358,11 @@ class Dots {
         var cumulativeBinWidth = 0;
         var binsArray = binWidths.map(function (binWidth, i) {
             var bin = {
-                donor_can: bydonor_can[i].key
-                , binWidth: binWidth
-                , binStart: cumulativeBinWidth + i * binMargin
-                , binCount: 0
-                , binCols: Math.floor(binWidth / increment)
+                donor_can: bydonor_can[i].key,
+                binWidth: binWidth,
+                binStart: cumulativeBinWidth + i * binMargin,
+                binCount: 0,
+                binCols: Math.floor(binWidth / increment)
             };
             cumulativeBinWidth += binWidth - 1;
             return bin
@@ -383,9 +383,9 @@ class Dots {
             var bin = bins[donor_can];
             if (!bin) {
                 return {
-                    x: d.x
-                    , y: d.y
-                    , color: [0, 0, 0]
+                    x: d.x,
+                    y: d.y,
+                    color: [0, 0, 0]
                 }
             }
             var binWidth = bin.binWidth;
