@@ -1,0 +1,501 @@
+//just bob
+    _singlePoint(points, width, height, donationsData) {
+        var self = this;
+
+        //point size and spacing for this shape
+        var pointWidth = width / 800;
+        var pointMargin = 1;
+        
+        //chop up data into buckets of different values in provided column
+        var bydonor_can = d3.nest()
+            .key(function (d) {
+                return d.bucket;
+            })
+            .entries(donationsData)
+            .filter(function (d) { return d.key === 'BOB' });
+
+        
+        var binMargin = 0;
+        var numBins = bydonor_can.length;
+        var minBinWidth = width / (numBins * 2.5);
+        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
+    
+        var binWidths = bydonor_can.map(function (d) {
+            return Math.ceil(d.values.length / donationsData.length * totalExtraWidth) + minBinWidth
+        });
+        
+        var increment = pointWidth + pointMargin;
+    
+        var cumulativeBinWidth = 0;
+        
+        var binsArray = binWidths.map(function (binWidth, i) {
+            var bin = {
+                bucket: bydonor_can[i].key,
+                binWidth: binWidth,
+                binStart: cumulativeBinWidth + i * binMargin,
+                binCount: 0,
+                binCols: Math.floor(binWidth / increment)
+            };
+            cumulativeBinWidth += binWidth - 1;
+            return bin;
+        });
+        
+        var bins = d3.nest()
+            .key(function (d) {
+                return d.bucket;
+            })
+            .rollup(function (d) {
+                return d[0];
+            })
+            .object(binsArray);
+        
+        //redraw the dots according to the categorized bins we've generated
+        var arrangement = points.map(function (d, i) {
+            var bucket = "BOB";
+            var bin = bins[bucket];
+            var binWidth = bin.binWidth;
+            var binCount = 1;
+            var binStart = bin.binStart;
+            var binCols = bin.binCols;
+            var row = Math.floor(binCount / binCols);
+            var col = binCount % binCols;
+            var x = width / 2;
+            var y = height / 2;
+            
+            bin.binCount += 1;
+            return {
+                x: x,
+                y: y, 
+                color: [66 / 255, 134 / 255, 244 / 255]
+            }
+        });
+        
+        arrangement.forEach(function (d, i) {
+            Object.assign(points[i], d)
+        });
+    }
+
+    //donations first half 2015
+    _cloud2015half(points, width, height, donationsData) {
+        var self = this;
+
+        //point size and spacing for this shape
+        var pointWidth = width / 800;
+        var pointMargin = 1;
+        
+        //chop up data into buckets of different values in provided column
+        var bydonor_can = d3.nest()
+            .key(function (d) {
+                return d.donor_can;
+            })
+            .entries(donationsData)
+            .filter(function (d) { return d.key === 'OTHER15A' });
+        
+        var binMargin = 0;
+        var numBins = bydonor_can.length;
+        var minBinWidth = width / (numBins * 2.5);
+        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
+    
+        var binWidths = bydonor_can.map(function (d) {
+            return Math.ceil(d.values.length / donationsData.length * totalExtraWidth) + minBinWidth
+        });
+        
+        var increment = pointWidth + pointMargin;
+    
+        var cumulativeBinWidth = 0;
+        
+        var binsArray = binWidths.map(function (binWidth, i) {
+            var bin = {
+                bucket: bydonor_can[i].key,
+                binWidth: binWidth,
+                binStart: cumulativeBinWidth + i * binMargin,
+                binCount: 0,
+                binCols: Math.floor(binWidth / increment)
+            };
+            cumulativeBinWidth += binWidth - 1;
+            return bin;
+        });
+        
+        var bins = d3.nest()
+            .key(function (d) {
+                return d.bucket;
+            })
+            .rollup(function (d) {
+                return d[0];
+            })
+            .object(binsArray);
+        
+        //redraw the dots according to the categorized bins we've generated
+        var arrangement = points.map(function (d, i) {
+            var bucket = "OTHER15A";
+            var bin = bins[bucket];
+            var binWidth = bin.binWidth;
+            var binCount = bin.binCount;
+            var binStart = bin.binStart;
+            var binCols = bin.binCols;
+            var row = Math.floor(binCount / binCols);
+            var col = binCount % binCols;
+            var x = binStart + col * increment;
+            var y = -row * increment + height;
+            
+            bin.binCount += 1;
+            return {
+                x: x,
+                y: y, 
+                color: [66 / 255, 134 / 255, 244 / 255]
+            }
+        });
+        
+        arrangement.forEach(function (d, i) {
+            Object.assign(points[i], d)
+        });
+    }
+
+    //donations first half 2019
+    _cloud2019(points, width, height, donationsData) {
+        var self = this;
+        
+        //point size and spacing for this shape
+        var pointWidth = width / 800;
+        var pointMargin = 1;
+
+        var donationFilter = donationsData.filter(function (d) { return d.donor_can != 'OTHER15B' });
+        
+        //chop up data into buckets of different values in provided column
+        var bydonor_can = d3.nest()
+            .key(function (d) {
+                return d.year;
+            })
+            .entries(donationFilter);
+        
+        console.log(bydonor_can);
+        
+        var binMargin = pointWidth * 10;
+        var numBins = bydonor_can.length;
+        var minBinWidth = width / (numBins * 2.5);
+        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
+        var binWidths = bydonor_can.map(function (d) {
+            return Math.ceil(d.values.length / donationFilter.length * totalExtraWidth) + minBinWidth
+        });
+        
+        var increment = pointWidth + pointMargin;
+        var cumulativeBinWidth = 0;
+        var binsArray = binWidths.map(function (binWidth, i) {
+            var bin = {
+                year: bydonor_can[i].key,
+                binWidth: binWidth,
+                binStart: cumulativeBinWidth + i * binMargin,
+                binCount: 0,
+                binCols: Math.floor(binWidth / increment)
+            };
+            cumulativeBinWidth += binWidth - 1;
+            return bin;
+        });
+        var bins = d3.nest()
+            .key(function (d) {
+                return d.year;
+            })
+            .rollup(function (d) {
+                return d[0];
+            })
+            .object(binsArray);
+
+            
+
+            console.log(bins);
+        
+        //assign colors to our points
+        self._candidateColors(points, donationsData);
+        
+        //redraw the dots according to the categorized bins we've generated
+            var arrangement = points.map(function (d, i) {
+            var year = donationsData[i].year;
+            var bin = bins[year];
+            var binWidth = bin.binWidth;
+            var binCount = bin.binCount;
+            var binStart = bin.binStart;
+            var binCols = bin.binCols;
+            var row = Math.floor(binCount / binCols);
+            var col = binCount % binCols;
+            var x = binStart + col * increment;
+            var y = -row * increment + height;
+            
+            bin.binCount += 1;
+            return {
+                x: x, 
+                y: y, 
+                color: [66 / 255, 134 / 255, 244 / 255]
+            }
+        });
+        
+        arrangement.forEach(function (d, i) {
+            Object.assign(points[i], d);
+        });
+    }
+
+    //donations all 2015
+    _cloud2015(points, width, height, donationsData) {
+
+    }
+
+    //highlight unique donors
+    _uniqueHighlight(points, width, height, donationsData) {
+
+    }
+
+    //pacing timeline
+    _paceChart(points, width, height, donationsData) {
+
+     }
+    
+    //2018 diagram
+    _cloud2018(points, width, height, donationsData) {
+
+    }
+
+    //presidential donations chart
+    _prezChart(points, width, height, donationsData) {
+
+    }
+
+    //zipcode map
+    _zipMap(points, width, height, donationsData) {
+
+    }
+
+    //overlap diagram
+    _overlapChart(points, width, height, donationsData) {
+
+    }
+
+    //candidate rankings
+    _candidateChart(points, width, height, donationsData) {
+
+    }
+
+    //big blue field that eats bob
+    _oceanSpill(points, width, height, donationsData) {
+
+    }
+
+    //2016 bar
+    _chartSpill(points, width, height, donationsData) {
+        var self = this;
+        
+        //point size and spacing for this shape
+        var pointWidth = width / 800;
+        var pointMargin = 1;
+        
+        //chop up data into buckets of different values in provided column
+        var bydonor_can = d3.nest()
+            .key(function (d) {
+                return d.donor_can;
+            })
+            .entries(donationsData);
+        
+        var binMargin = pointWidth * 10;
+        var numBins = bydonor_can.length;
+        var minBinWidth = width / (numBins * 2.5);
+        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
+        var binWidths = bydonor_can.map(function (d) {
+            return Math.ceil(d.values.length / donationsData.length * totalExtraWidth) + minBinWidth
+        });
+        
+        var increment = pointWidth + pointMargin;
+        var cumulativeBinWidth = 0;
+        var binsArray = binWidths.map(function (binWidth, i) {
+            var bin = {
+                donor_can: bydonor_can[i].key,
+                binWidth: binWidth,
+                binStart: cumulativeBinWidth + i * binMargin,
+                binCount: 0,
+                binCols: Math.floor(binWidth / increment)
+            };
+            cumulativeBinWidth += binWidth - 1;
+            return bin
+        });
+        var bins = d3.nest()
+            .key(function (d) {
+                return d.donor_can;
+            })
+            .rollup(function (d) {
+                return d[0];
+            })
+            .object(binsArray);
+        
+        //assign colors to our points
+        self._candidateColors(points, donationsData);
+        
+        //redraw the dots according to the categorized bins we've generated
+            var arrangement = points.map(function (d, i) {
+            var donor_can = donationsData[i].donor_can;
+            var bin = bins[donor_can];
+            var binWidth = bin.binWidth;
+            var binCount = bin.binCount;
+            var binStart = bin.binStart;
+            var binCols = bin.binCols;
+            var row = Math.floor(binCount / binCols);
+            var col = binCount % binCols;
+            var x = binStart + col * increment;
+            var y = -row * increment + height;
+            
+            bin.binCount += 1;
+            return {
+                x: x, 
+                y: y, 
+                color: d.color
+            }
+        });
+        
+        arrangement.forEach(function (d, i) {
+            Object.assign(points[i], d);
+        });
+    }
+    
+    //zip code breakdown shape
+    _zipSpill(points, pointWidth, xOffset, yOffset, donationsData) {
+        var self = this;
+
+        if (xOffset === void 0) xOffset = 0;
+        if (yOffset === void 0) yOffset = 0;
+        self._candidateColors(points, donationsData);
+        var sortData = donationsData.map(function (donor, index) {
+                return {
+                    index: index, 
+                    donor_can: donor.donor_can
+                }
+            })
+            .sort(function (a, b) {
+                return a.donor_can.localeCompare(b.donor_can)
+            });
+        var theta = Math.PI * (2 - Math.sqrt(2));
+        var pointRadius = pointWidth / 2;
+        sortData.forEach(function (d, i) {
+            var point = points[d.index];
+            var index = i % points.length;
+            var phylloX = pointRadius * Math.sqrt(index) * Math.cos(index * theta);
+            var phylloY = pointRadius * Math.sqrt(index) * Math.sin(index * theta);
+            point.x = xOffset + phylloX - pointRadius;
+            point.y = yOffset + phylloY - pointRadius
+        });
+        return points
+    }
+    
+    //donation totals chart shape
+    _totalsSpill(points, width, height, donationsData) {
+        var self = this;
+
+        var pointWidth = width / 800;
+        var pointMargin = 1;
+        
+        var bydonor_can = d3.nest()
+            .key(function (d) {
+                return d.donor_can
+            })
+            .entries(donationsData)
+            .filter(function (d) {
+                return d.values.length > 10
+            });
+        
+        var binMargin = pointWidth * 10;
+        var numBins = bydonor_can.length;
+        var minBinWidth = width / (numBins * 2.5);
+        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
+        var binWidths = bydonor_can.map(function (d) {
+            return Math.ceil(d.values.length / donationsData.length * totalExtraWidth) + minBinWidth
+        });
+        
+        var increment = pointWidth + pointMargin;
+        var cumulativeBinWidth = 0;
+        var binsArray = binWidths.map(function (binWidth, i) {
+            var bin = {
+                donor_can: bydonor_can[i].key,
+                binWidth: binWidth,
+                binStart: cumulativeBinWidth + i * binMargin,
+                binCount: 0,
+                binCols: Math.floor(binWidth / increment)
+            };
+            cumulativeBinWidth += binWidth - 1;
+            return bin
+        });
+        var bins = d3.nest()
+            .key(function (d) {
+                return d.donor_can
+            })
+            .rollup(function (d) {
+                return d[0]
+            })
+            .object(binsArray);
+        
+        self._candidateColors(points, donationsData);
+        
+        var arrangement = points.map(function (d, i) {
+            var donor_can = donationsData[i].donor_can;
+            var bin = bins[donor_can];
+            if (!bin) {
+                return {
+                    x: d.x,
+                    y: d.y,
+                    color: [0, 0, 0]
+                }
+            }
+            var binWidth = bin.binWidth;
+            var binCount = bin.binCount;
+            var binStart = bin.binStart;
+            var binCols = bin.binCols;
+            var row = Math.floor(binCount / binCols);
+            var col = binCount % binCols;
+            var x = binStart + col * increment;
+            var y = -row * increment + height;
+            
+            bin.binCount += 1;
+            return {
+                x: x,
+                y: y,
+                color: d.color
+            }
+        });
+        
+        arrangement.forEach(function (d, i) {
+            Object.assign(points[i], d)
+        });
+    }
+    
+    //area chart timeline shape
+    _areaSpill(points, width, height, donationsData) {
+        var self = this;
+
+        self._candidateColors(points, donationsData);
+        var rng = d3.randomNormal(0, .2);
+        var pointWidth = Math.round(width / 800);
+        var pointMargin = 1;
+        var pointHeight = pointWidth * .375;
+        var latExtent = d3.extent(donationsData, function (d) {
+            return d.lat
+        });
+        var xScale = d3.scaleQuantize()
+            .domain(latExtent)
+            .range(d3.range(0, width, pointWidth + pointMargin));
+        var binCounts = xScale.range()
+            .reduce(function (accum, binNum) {
+                accum[binNum] = 0;
+                return accum
+            }, {});
+        var bydonor_can = d3.nest()
+            .key(function (d) {
+                return d.donor_can
+            })
+            .entries(donationsData);
+        donationsData.forEach(function (donor, i) {
+            donor.d = points[i]
+        });
+        bydonor_can.forEach(function (donor_can, i) {
+            donor_can.values.forEach(function (donor, j) {
+                var d = donor.d;
+                var binNum = xScale(donor.lat);
+                d.x = binNum;
+                d.y = height - pointHeight * binCounts[binNum];
+                binCounts[binNum] += 1
+            })
+        })
+    }

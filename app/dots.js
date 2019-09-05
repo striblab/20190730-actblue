@@ -10,10 +10,10 @@ class Dots {
         this.donationsData = donationsData;
 
         //dataviz display settings
-        this.width = 1000;
-        this.height = 1500;
+        this.width = 3000;
+        this.height = 1000;
         this.numPoints = donationsData.length;
-        this.pointWidth = 3;
+        this.pointWidth = 10;
         this.points = d3.range(this.numPoints).map(function (d) { return {}; }); //array of points to generate as dataviz sprites
         this.colorScales = [d3.scaleSequential(d3.interpolateViridis), d3.scaleSequential(d3.interpolateMagma), d3.scaleSequential(d3.interpolateInferno), d3
             .scaleSequential(d3.interpolateCool)].map(this._wrapColorScale);
@@ -29,19 +29,33 @@ class Dots {
         this._buildPoints = this._buildPoints.bind(this);
         this._candidateColors = this._candidateColors.bind(this);
         this._wrapColorScale = this._wrapColorScale.bind(this);
-        this._fieldSpill = this._fieldSpill.bind(this);
-        this._chartSpill = this._chartSpill.bind(this);
-        this._mapSpill = this._mapSpill.bind(this);
-        this._zipSpill = this._zipSpill.bind(this);
-        this._totalsSpill = this._totalsSpill.bind(this);
-        this._areaSpill = this._areaSpill.bind(this);
+        this._slide0 = this._slide0.bind(this);
+        this._slide1 = this._slide1.bind(this);
+        this._slide2 = this._slide2.bind(this);
+        this._slide3 = this._slide3.bind(this);
+        this._slide4 = this._slide4.bind(this);
+        this._slide5 = this._slide5.bind(this);
+        this._slide6 = this._slide6.bind(this);
+        this._slide7 = this._slide7.bind(this);
+        this._slide8 = this._slide8.bind(this);
+        this._slide9 = this._slide9.bind(this);
+        this._slide10 = this._slide10.bind(this);
+        this._slide11 = this._slide11.bind(this);
+        this._slide12 = this._slide12.bind(this);
         this._fadeout = this._fadeout.bind(this);
-        this._showField = this._showField.bind(this);
-        this._showChart = this._showChart.bind(this);
-        this._showMap = this._showMap.bind(this);
-        this._showZips = this._showZips.bind(this);
-        this._showTotals = this._showTotals.bind(this);
-        this._showArea = this._showArea.bind(this);
+        this._zeroPoint = this._zeroPoint.bind(this);
+        this._onePoint = this._onePoint.bind(this);
+        this._twoPoint = this._twoPoint.bind(this);
+        this._threePoint = this._threePoint.bind(this);
+        this._fourPoint = this._fourPoint.bind(this);
+        this._fivePoint = this._fivePoint.bind(this);
+        this._sixPoint = this._sixPoint.bind(this);
+        this._sevenPoint = this._sevenPoint.bind(this);
+        this._eightPoint = this._eightPoint.bind(this);
+        this._ninePoint = this._ninePoint.bind(this);
+        this._tenPoint = this._tenPoint.bind(this);
+        this._elevenPoint = this._elevenPoint.bind(this);
+        this._twelvePoint = this._twelvePoint.bind(this);
         this._animate = this._animate.bind(this);
     }
 
@@ -89,19 +103,42 @@ class Dots {
     }
 
     //DATA COLORING
-    _candidateColors(points, donationsData) {
-        //define color scale per data label
+    _candidateColors(points, donationsData, index) {
+        var colors = [];
+        var values = [];
+
+        values[1] = ["OTHER15A","OTHER15B","BENNET","BIDEN","BOOKER","BULLOCK","BUTTIGIEG","CASTRO","DEBLASIO","DELANEY","GABBARD","GILLIBRAND","GRAVEL","HARRIS","HICKENLOOPER","INSLEE","KLOBUCHAR","MOULTON","OROURKE","RYAN","SANDERS","SESTAK","WARREN","WILLIAMSON","YANG","OTHER"];
+        colors[1] = ["#A7E6E3","#A7E6E3","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff","#ffffff"];
+
+        values[2] = ["OTHER15A","OTHER15B","BENNET","BIDEN","BOOKER","BULLOCK","BUTTIGIEG","CASTRO","DEBLASIO","DELANEY","GABBARD","GILLIBRAND","GRAVEL","HARRIS","HICKENLOOPER","INSLEE","KLOBUCHAR","MOULTON","OROURKE","RYAN","SANDERS","SESTAK","WARREN","WILLIAMSON","YANG","OTHER"];
+        colors[2] = ["#A7E6E3","#A7E6E3","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0"];
+
+        values[3] = ["UNIQUE15","UNIQUE19","ALL","BOB"];
+        colors[3] = ["#E07242","#E07242","#ffffff","#ffffff"];
+
+        values[4] = ["KLOBUCHAR","BENNET","BIDEN","BOOKER","BULLOCK","BUTTIGIEG","CASTRO","DEBLASIO","DELANEY","GABBARD","GILLIBRAND","GRAVEL","HARRIS","HICKENLOOPER","INSLEE","MOULTON","OROURKE","RYAN","SANDERS","SESTAK","WARREN","WILLIAMSON","YANG","OTHER","OTHER15A","OTHER15B"];
+        colors[4] = ["#5BBF48","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0","#386cb0"];
+
+        values[11] = ["SANDERS","BENNET","BIDEN","BOOKER","BULLOCK","BUTTIGIEG","CASTRO","DEBLASIO","DELANEY","GABBARD","GILLIBRAND","GRAVEL","HARRIS","HICKENLOOPER","INSLEE","MOULTON","OROURKE","RYAN","KLOBUCHAR","SESTAK","WARREN","WILLIAMSON","YANG","OTHER"];
+        colors[11] = ["#386cb0","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3","#A7E6E3"];
+
         var colorScale = d3.scaleOrdinal()
-            .domain(["WARREN", "HARRIS", "BIDEN", "SANDERS", "KLOBUCHAR", "BUTTIGIEG", "OROURKE", "OTHER"])
-            .range(d3.range(0, 1, 0.16)
-                .concat(1)
-                .map(d3.scaleOrdinal(['#386cb0', '#f0027f', '#beaed4', '#7fc97f', '#bf5b17', '#fdc086', '#D8D861', '#666666'])));
-        
+            .domain(values[index])
+            .range(colors[index]);
+
         //assign colors to our points accordingly
-        points.forEach(function (d, i) {
-            var rgbArray = d3.rgb(colorScale(donationsData[i].donor_can));
-            d.color = [rgbArray.r / 255, rgbArray.g / 255, rgbArray.b / 255];
-        });
+        if (index == 1 || index == 2 || index == 4) {
+            points.forEach(function (d, i) {
+                var rgbArray = d3.rgb(colorScale(donationsData[i].donor_can));
+                d.color = [rgbArray.r / 255, rgbArray.g / 255, rgbArray.b / 255];
+            });
+        }
+        else if (index == 3) {
+            points.forEach(function (d, i) {
+                var rgbArray = d3.rgb(colorScale(donationsData[i].bucket));
+                    d.color = [rgbArray.r / 255, rgbArray.g / 255, rgbArray.b / 255];
+            });
+        }  
     }
     
     _wrapColorScale(scale) {
@@ -116,22 +153,22 @@ class Dots {
     }
 
     //SHAPE LAYOUTS
+    _slide0(points, width, height, donationsData, index) {
+        console.log(index);
 
-    //big blue field shape
-    _fieldSpill(points, width, height, donationsData) {
         var self = this;
 
         //point size and spacing for this shape
         var pointWidth = width / 800;
         var pointMargin = 1;
-        
+
         //chop up data into buckets of different values in provided column
         var bydonor_can = d3.nest()
             .key(function (d) {
                 return d.all;
             })
             .entries(donationsData);
-        
+
         var binMargin = 0;
         var numBins = bydonor_can.length;
         var minBinWidth = width / (numBins * 2.5);
@@ -154,9 +191,10 @@ class Dots {
                 binCols: Math.floor(binWidth / increment)
             };
             cumulativeBinWidth += binWidth - 1;
-            return bin
+
+            return bin;
         });
-        
+
         var bins = d3.nest()
             .key(function (d) {
                 return d.all;
@@ -165,10 +203,11 @@ class Dots {
                 return d[0];
             })
             .object(binsArray);
-        
+
         //redraw the dots according to the categorized bins we've generated
         var arrangement = points.map(function (d, i) {
-            var all = donationsData[i].all;
+
+            var all = "all";
             var bin = bins[all];
             var binWidth = bin.binWidth;
             var binCount = bin.binCount;
@@ -176,9 +215,118 @@ class Dots {
             var binCols = bin.binCols;
             var row = Math.floor(binCount / binCols);
             var col = binCount % binCols;
-            var x = binStart + col * increment;
-            var y = -row * increment + height;
-            
+            var x = row * increment;
+            var y = col * increment;
+
+            bin.binCount += 1;
+            return {
+                x: x,
+                y: y, 
+                color: [255 / 255, 255 / 255, 255 / 255]
+            }
+        });
+        
+        arrangement.forEach(function (d, i) {
+            Object.assign(points[i], d)
+        });
+    }
+
+    _slide1(points, width, height, donationsData, index) {
+        console.log(index);
+
+        var self = this;
+
+        //assign colors to our points
+        self._candidateColors(points, donationsData, index);
+    }
+
+    _slide2(points, width, height, donationsData, index) {
+        console.log(index);
+
+        var self = this;
+
+        //assign colors to our points
+        self._candidateColors(points, donationsData, index);  
+    }
+
+    _slide3(points, width, height, donationsData, index) {
+        console.log(index);
+
+        var self = this;
+
+        //assign colors to our points
+        self._candidateColors(points, donationsData, index); 
+    }
+
+    _slide4(points, width, height, donationsData, index) {
+        console.log("LAUNCH");
+
+        var self = this;
+
+        //point size and spacing for this shape
+        var pointWidth = width / 800;
+        var pointMargin = 1;
+
+        //chop up data into buckets of different values in provided column
+        var bydonor_can = d3.nest()
+            .key(function (d) {
+                return d.all;
+            })
+            .entries(donationsData
+                .filter(function(d){return d.year != 2015;})
+                .sort(function(x, y){
+                return d3.ascending(x.donor_can, y.donor_can);
+             }));
+
+        var binMargin = 0;
+        var numBins = bydonor_can.length;
+        var minBinWidth = width / (numBins * 2.5);
+        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
+    
+        var binWidths = bydonor_can.map(function (d) {
+            return Math.ceil(d.values.length / donationsData.length * totalExtraWidth) + minBinWidth
+        });
+        
+        var increment = pointWidth + pointMargin;
+    
+        var cumulativeBinWidth = 0;
+        
+        var binsArray = binWidths.map(function (binWidth, i) {
+            var bin = {
+                all: bydonor_can[i].key,
+                binWidth: binWidth,
+                binStart: cumulativeBinWidth + i * binMargin,
+                binCount: 0,
+                binCols: Math.floor(binWidth / increment)
+            };
+            cumulativeBinWidth += binWidth - 1;
+
+            return bin;
+        });
+
+        var bins = d3.nest()
+            .key(function (d) {
+                return d.all;
+            })
+            .rollup(function (d) {
+                return d[0];
+            })
+            .object(binsArray);
+
+        //redraw the dots according to the categorized bins we've generated
+        var arrangement = points.map(function (d, i) {
+
+            var all = "all";
+            var bin = bins[all];
+            var binWidth = bin.binWidth;
+            var binCount = bin.binCount;
+            var binStart = bin.binStart;
+            var binCols = bin.binCols;
+            var row = Math.floor(binCount / binCols);
+            var col = binCount % binCols;
+            var x = row * increment;
+            var y = col * increment;
+
             bin.binCount += 1;
             return {
                 x: x,
@@ -190,263 +338,79 @@ class Dots {
         arrangement.forEach(function (d, i) {
             Object.assign(points[i], d)
         });
-        
+
+        self._candidateColors(points, donationsData, index);
     }
-    
-    //bar chart shape
-    _chartSpill(points, width, height, donationsData) {
+
+    _slide5(points, width, height, donationsData, index) {
+        console.log(index);
+
         var self = this;
-        
-        //point size and spacing for this shape
-        var pointWidth = width / 800;
-        var pointMargin = 1;
-        
-        //chop up data into buckets of different values in provided column
-        var bydonor_can = d3.nest()
-            .key(function (d) {
-                return d.donor_can;
-            })
-            .entries(donationsData);
-        
-        var binMargin = pointWidth * 10;
-        var numBins = bydonor_can.length;
-        var minBinWidth = width / (numBins * 2.5);
-        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
-        var binWidths = bydonor_can.map(function (d) {
-            return Math.ceil(d.values.length / donationsData.length * totalExtraWidth) + minBinWidth
+
+        points.forEach(function (d, i) {
+            d.color = [255, 255, 255];
         });
-        
-        var increment = pointWidth + pointMargin;
-        var cumulativeBinWidth = 0;
-        var binsArray = binWidths.map(function (binWidth, i) {
-            var bin = {
-                donor_can: bydonor_can[i].key,
-                binWidth: binWidth,
-                binStart: cumulativeBinWidth + i * binMargin,
-                binCount: 0,
-                binCols: Math.floor(binWidth / increment)
-            };
-            cumulativeBinWidth += binWidth - 1;
-            return bin
-        });
-        var bins = d3.nest()
-            .key(function (d) {
-                return d.donor_can;
-            })
-            .rollup(function (d) {
-                return d[0];
-            })
-            .object(binsArray);
-        
+    }
+
+    _slide6(points, width, height, donationsData, index) {
+        console.log(index);
+
         //assign colors to our points
-        self._candidateColors(points, donationsData);
-        
-        //redraw the dots according to the categorized bins we've generated
-            var arrangement = points.map(function (d, i) {
-            var donor_can = donationsData[i].donor_can;
-            var bin = bins[donor_can];
-            var binWidth = bin.binWidth;
-            var binCount = bin.binCount;
-            var binStart = bin.binStart;
-            var binCols = bin.binCols;
-            var row = Math.floor(binCount / binCols);
-            var col = binCount % binCols;
-            var x = binStart + col * increment;
-            var y = -row * increment + height;
-            
-            bin.binCount += 1;
-            return {
-                x: x, 
-                y: y, 
-                color: d.color
-            }
-        });
-        
-        arrangement.forEach(function (d, i) {
-            Object.assign(points[i], d);
-        });
+        // self._candidateColors(points, donationsData, index);
     }
-    
-    //map shape
-    _mapSpill(points, width, height, donationsData) {
+
+    _slide7(points, width, height, donationsData, index) {
+        console.log(index);
+        
         var self = this;
 
-        //grab coordinates from our JSON data
-            var latitude = d3.extent(donationsData, function (d) {
-                return d.lat
-            });
-            var longitude = d3.extent(donationsData, function (d) {
-                return d.lng
-            });
-            
-        //transmute our coordinates into GEOJSON
-            var extentGeoJson = {
-                type: "LineString", coordinates: [
-                    [longitude[0], latitude[0]], 
-                    [longitude[1], latitude[1]]
-                ]
-            };
-    
-        //classic D3 mercator map projection magicks
-            var projection = d3.geoMercator().fitSize([width, height], extentGeoJson);
-                
-        //assign each point a projected coordinate to place on the map
-            points.forEach(function (d, i) {
-                var location = projection([donationsData[i].lng, donationsData[i].lat]);
-                d.x = location[0];
-                d.y = location[1];
-            })
-    
-        //color the map points
-            self._candidateColors(points, donationsData);
+        //assign colors to our points
+        // self._candidateColors(points, donationsData, index);
     }
-    
-    //zip code breakdown shape
-    _zipSpill(points, pointWidth, xOffset, yOffset, donationsData) {
+
+    _slide8(points, width, height, donationsData, index) {
+        console.log(index);
+
         var self = this;
 
-        if (xOffset === void 0) xOffset = 0;
-        if (yOffset === void 0) yOffset = 0;
-        self._candidateColors(points, donationsData);
-        var sortData = donationsData.map(function (donor, index) {
-                return {
-                    index: index, 
-                    donor_can: donor.donor_can
-                }
-            })
-            .sort(function (a, b) {
-                return a.donor_can.localeCompare(b.donor_can)
-            });
-        var theta = Math.PI * (2 - Math.sqrt(2));
-        var pointRadius = pointWidth / 2;
-        sortData.forEach(function (d, i) {
-            var point = points[d.index];
-            var index = i % points.length;
-            var phylloX = pointRadius * Math.sqrt(index) * Math.cos(index * theta);
-            var phylloY = pointRadius * Math.sqrt(index) * Math.sin(index * theta);
-            point.x = xOffset + phylloX - pointRadius;
-            point.y = yOffset + phylloY - pointRadius
-        });
-        return points
+        //assign colors to our points
+        self._candidateColors(points, donationsData, index);
     }
-    
-    //donation totals chart shape
-    _totalsSpill(points, width, height, donationsData) {
+
+    _slide9(points, width, height, donationsData, index) {
+        console.log(index);
+
         var self = this;
 
-        var pointWidth = width / 800;
-        var pointMargin = 1;
-        
-        var bydonor_can = d3.nest()
-            .key(function (d) {
-                return d.donor_can
-            })
-            .entries(donationsData)
-            .filter(function (d) {
-                return d.values.length > 10
-            });
-        
-        var binMargin = pointWidth * 10;
-        var numBins = bydonor_can.length;
-        var minBinWidth = width / (numBins * 2.5);
-        var totalExtraWidth = width - binMargin * (numBins - 1) - minBinWidth * numBins;
-        var binWidths = bydonor_can.map(function (d) {
-            return Math.ceil(d.values.length / donationsData.length * totalExtraWidth) + minBinWidth
-        });
-        
-        var increment = pointWidth + pointMargin;
-        var cumulativeBinWidth = 0;
-        var binsArray = binWidths.map(function (binWidth, i) {
-            var bin = {
-                donor_can: bydonor_can[i].key,
-                binWidth: binWidth,
-                binStart: cumulativeBinWidth + i * binMargin,
-                binCount: 0,
-                binCols: Math.floor(binWidth / increment)
-            };
-            cumulativeBinWidth += binWidth - 1;
-            return bin
-        });
-        var bins = d3.nest()
-            .key(function (d) {
-                return d.donor_can
-            })
-            .rollup(function (d) {
-                return d[0]
-            })
-            .object(binsArray);
-        
-        self._candidateColors(points, donationsData);
-        
-        var arrangement = points.map(function (d, i) {
-            var donor_can = donationsData[i].donor_can;
-            var bin = bins[donor_can];
-            if (!bin) {
-                return {
-                    x: d.x,
-                    y: d.y,
-                    color: [0, 0, 0]
-                }
-            }
-            var binWidth = bin.binWidth;
-            var binCount = bin.binCount;
-            var binStart = bin.binStart;
-            var binCols = bin.binCols;
-            var row = Math.floor(binCount / binCols);
-            var col = binCount % binCols;
-            var x = binStart + col * increment;
-            var y = -row * increment + height;
-            
-            bin.binCount += 1;
-            return {
-                x: x,
-                y: y,
-                color: d.color
-            }
-        });
-        
-        arrangement.forEach(function (d, i) {
-            Object.assign(points[i], d)
-        });
+        //assign colors to our points
+        // self._candidateColors(points, donationsData, index);
     }
-    
-    //area chart timeline shape
-    _areaSpill(points, width, height, donationsData) {
+
+    _slide10(points, width, height, donationsData, index) {
+        console.log(index);
+
         var self = this;
 
-        self._candidateColors(points, donationsData);
-        var rng = d3.randomNormal(0, .2);
-        var pointWidth = Math.round(width / 800);
-        var pointMargin = 1;
-        var pointHeight = pointWidth * .375;
-        var latExtent = d3.extent(donationsData, function (d) {
-            return d.lat
-        });
-        var xScale = d3.scaleQuantize()
-            .domain(latExtent)
-            .range(d3.range(0, width, pointWidth + pointMargin));
-        var binCounts = xScale.range()
-            .reduce(function (accum, binNum) {
-                accum[binNum] = 0;
-                return accum
-            }, {});
-        var bydonor_can = d3.nest()
-            .key(function (d) {
-                return d.donor_can
-            })
-            .entries(donationsData);
-        donationsData.forEach(function (donor, i) {
-            donor.d = points[i]
-        });
-        bydonor_can.forEach(function (donor_can, i) {
-            donor_can.values.forEach(function (donor, j) {
-                var d = donor.d;
-                var binNum = xScale(donor.lat);
-                d.x = binNum;
-                d.y = height - pointHeight * binCounts[binNum];
-                binCounts[binNum] += 1
-            })
-        })
+        //assign colors to our points
+        // self._candidateColors(points, donationsData, index);
+    }
+
+    _slide11(points, width, height, donationsData, index) {
+        console.log(index);
+
+        var self = this;
+
+        //assign colors to our points
+        self._candidateColors(points, donationsData, index);
+    }
+
+    _slide12(points, width, height, donationsData, index) {
+        console.log(index);
+
+        var self = this;
+
+        //assign colors to our points
+        self._candidateColors(points, donationsData, index);
     }
 
     //fadeout, banish those dots from the realm
@@ -457,36 +421,70 @@ class Dots {
     };
 
     //DATA ANIMATION TRIGGERS
-    _showField(points) {
+    _zeroPoint(points) {
         var self = this;
-        return self._fieldSpill(points, self.width, self.height, self.donationsData);
+        return self._slide0(points, self.width, self.height, self.donationsData, 0);
     };
         
-    _showChart(points) {
+    _onePoint(points) {
         var self = this;
-        return self._chartSpill(points, self.width, self.height, self.donationsData);
+        return self._slide1(points, self.width, self.height, self.donationsData, 1);
     };
         
-    _showMap(points) {
+    _twoPoint(points) {
         var self = this;
-        return self._mapSpill(points, self.width, self.height, self.donationsData);
+        return self._slide2(points, self.width, self.height, self.donationsData, 2);
     };
         
-    _showZips(points) {
+    _threePoint(points) {
         var self = this;
-        return self._zipSpill(points, self.pointWidth, self.width / 2, self.height / 2, self.donationsData);
+        return self._slide3(points, self.width, self.height, self.donationsData, 3);
     };
         
-    _showTotals(points) {
+    _fourPoint(points) {
         var self = this;
-        return self._totalsSpill(points, self.width, self.height, self.donationsData);
+        return self._slide4(points, self.width, self.height, self.donationsData, 4);
     };
         
-    _showArea(points) {
+    _fivePoint(points) {
         var self = this;
-        return self._areaSpill(points, self.width, self.height, self.donationsData);
+        return self._slide5(points, self.width, self.height, self.donationsData, 5);
+    };
+        
+    _sixPoint(points) {
+        var self = this;
+        // return self._slide6(points, self.width, self.height, self.donationsData, 6);
     };
 
+    _sevenPoint(points) {
+        var self = this;
+        // return self._slide7(points, self.width, self.height, self.donationsData, 7);
+    };
+
+    _eightPoint(points) {
+        var self = this;
+        return self._slide8(points, self.width, self.height, self.donationsData, 8);
+    };
+
+    _ninePoint(points) {
+        var self = this;
+        return self._slide9(points, self.width, self.height, self.donationsData, 9);
+    };
+
+    _tenPoint(points) {
+        var self = this;
+        return self._slide10(points, self.width, self.height, self.donationsData, 10);
+    };
+
+    _elevenPoint(points) {
+        var self = this;
+        return self._slide11(points, self.width, self.height, self.donationsData, 11);
+    };
+
+    _twelvePoint(points) {
+        var self = this;
+        return self._slide12(points, self.width, self.height, self.donationsData, 12);
+    };
 
     //DATA ANIMATION
     _animate(layout, points) {
@@ -556,57 +554,69 @@ class Dots {
         });
 
        //assign the different layout triggers to an array to more easily call them
-       var layouts = [self._showField, self._showChart, self._showMap, self._showZips, self._showTotals, self._showArea, self._fadeout];
+       var layouts = [self._zeroPoint, self._onePoint, self._twoPoint, self._threePoint, self._fourPoint, self._fivePoint, self._sixPoint, self._sevenPoint, self._eightPoint, self._ninePoint, self._tenPoint, self._elevenPoint, self._twelvePoint];
+
+       //initialize grid
+    //    self._animate(layouts[0], self.points);
 
        //assign crolling waypoint triggers
-       var waypoint0 = new Waypoint({
-        element: $('#step0')[0],
-        handler: function(direction) {
-          self._animate(layouts[0], self.points);
-        }
-      });
+    //    var waypoint0 = new Waypoint({
+    //     element: $('#step0')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[0], self.points);
+    //     }
+    //   });
 
-      var waypoint1 = new Waypoint({
-        element: $('#step1')[0],
-        handler: function(direction) {
-          self._animate(layouts[1], self.points);
-        }
-      });
+    //    var waypoint1 = new Waypoint({
+    //     element: $('#step1')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[1], self.points);
+    //     }
+    //   });
 
-      var waypoint2 = new Waypoint({
-        element: $('#step2')[0],
-        handler: function(direction) {
-          self._animate(layouts[2], self.points);
-        }
-      });
+    //   var waypoint2 = new Waypoint({
+    //     element: $('#step2')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[2], self.points);
+    //     }
+    //   });
 
-      var waypoint3 = new Waypoint({
-        element: $('#step3')[0],
-        handler: function(direction) {
-          self._animate(layouts[3], self.points);
-        }
-      });
+    //   var waypoint3 = new Waypoint({
+    //     element: $('#step3')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[3], self.points);
+    //     }
+    //   });
 
-      var waypoint4 = new Waypoint({
-        element: $('#step4')[0],
-        handler: function(direction) {
-          self._animate(layouts[4], self.points);
-        }
-      });
+    //   var waypoint4 = new Waypoint({
+    //     element: $('#step4')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[4], self.points);
+    //     }
+    //   });
+
+    //   var waypoint5 = new Waypoint({
+    //     element: $('#step5')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[5], self.points);
+    //     }
+    //   });
       
-      var waypoint5 = new Waypoint({
-        element: $('#step5')[0],
-        handler: function(direction) {
-          self._animate(layouts[5], self.points);
-        }
-      });
+    //   var waypoint6 = new Waypoint({
+    //     element: $('#step6')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[6], self.points);
+    //     }
+    //   });
 
-      var waypoint6 = new Waypoint({
-        element: $('#step6')[0],
-        handler: function(direction) {
-          self._animate(layouts[6], self.points);
-        }
-      });
+    //   var waypoint7 = new Waypoint({
+    //     element: $('#step7')[0],
+    //     handler: function(direction) {
+    //       self._animate(layouts[7], self.points);
+    //       $("canvas").hide();
+    //     }
+    //   });
+
     }
 }
 
