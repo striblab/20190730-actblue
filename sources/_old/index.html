@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+<div id="buttonMe">CLICK</div>
+
+<script>
+  var width = 450
+  var height = 450
+  
+  var svg = d3.select("#my_dataviz")
+    .append("svg")
+      .attr("width", 450)
+      .attr("height", 450)
+  
+  var data = [{ "name": "A", "group": 1 }, { "name": "B", "group": 1 }, { "name": "C", "group": 1 }, { "name": "D", "group": 1 }, { "name": "E", "group": 1 }, { "name": "F", "group": 1 },
+              { "name": "G", "group": 2 }, { "name": "H", "group": 2 }, { "name": "I", "group": 2 }, { "name": "J", "group": 2 }, { "name": "K", "group": 2 }, { "name": "L", "group": 2 },
+              { "name": "M", "group": 3 }, { "name": "N", "group": 3 }, { "name": "O", "group": 3 }]
+
+   var data2 = [{ "name": "A", "group": 3 }, { "name": "B", "group": 1 }, { "name": "C", "group": 1 }, { "name": "D", "group": 1 }, { "name": "E", "group": 1 }, { "name": "F", "group": 1 },
+              { "name": "G", "group": 2 }, { "name": "H", "group": 2 }, { "name": "I", "group": 2 }, { "name": "J", "group": 2 }, { "name": "K", "group": 2 }, { "name": "L", "group": 2 },
+              { "name": "M", "group": 3 }, { "name": "N", "group": 3 }, { "name": "O", "group": 3 }]
+  
+  var x = d3.scaleOrdinal()
+    .domain([1, 2, 3])
+    .range([50, 200, 340])
+  
+  var color = d3.scaleOrdinal()
+    .domain([1, 2, 3])
+    .range([ "#F8766D", "#00BA38", "#619CFF"])
+  
+  var node = svg.append("g")
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("r", 5)
+      .attr("cx", width / 2)
+      .attr("cy", height / 2)
+      .style("fill", function(d){ return color(d.group)})
+      .style("fill-opacity", 0.8)
+      // .attr("stroke", "black")
+      .style("stroke-width", 1);
+  
+
+  var simulation = d3.forceSimulation()
+      .force("x", d3.forceX().strength(0.8).x( function(d){ return x(d.group) } ))
+      .force("y", d3.forceY().strength(0.8).y( height/2 ))
+      .force("center", d3.forceCenter().x(width / 2).y(height / 2))
+      .force("charge", d3.forceManyBody().strength(1))
+      .force("collide", d3.forceCollide().strength(.1).radius(10).iterations(1));
+
+  simulation
+      .nodes(data)
+      .on("tick", function(d){
+        node
+            .attr("cx", function(d){ return d.x; })
+            .attr("cy", function(d){ return d.y; })
+      });
+
+
+    function update(new_data){
+
+       var t = d3.transition().duration(1200);
+
+      // x.domain([3, 2, 1])
+      // .range([50, 200, 340])
+
+      node.data(new_data).transition(t);
+
+        simulation
+        .nodes(new_data)
+        .force("center", d3.forceCenter().x(width / 2).y(height / 2))
+        .on("tick", function(d){
+          node
+              .attr("cx", function(d){ return d.x; })
+              .attr("cy", function(d){ return d.y; })
+        });
+    }
+
+    $("#buttonMe").on("click", function(){
+      console.log("trigger");
+      update(data2);
+    });
+
+  </script>
